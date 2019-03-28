@@ -111,3 +111,6 @@ include/Imap/ImapTestSettings.txt
 
 # Ignore php-cs-fixer cache
 .php_cs.cache
+
+# Ignore Eclipse buildpath
+.buildpath

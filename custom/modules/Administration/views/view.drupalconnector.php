@@ -1,14 +1,18 @@
 <?php
-// namespace custom\modules\Administration\views;
-if (! defined ( 'sugarEntry' ) || ! sugarEntry) {
-	die ( 'Not a valid entry point' );
+/**
+ * Drupal Connector View
+ * @author Mihir Parikh
+ */
+
+if(!defined ('sugarEntry') || !sugarEntry) {
+	die ('Not a valid entry point');
 }
 
 global $current_user, $sugar_config;
 
 // ACL check
-if (! is_admin ( $current_user )) {
-	sugar_die ( "Unauthorised access to Administration area" );
+if(!is_admin ($current_user)) {
+	sugar_die ("Unauthorised access to Administration area");
 }
 
 require_once 'include/MVC/View/SugarView.php';

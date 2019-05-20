@@ -31,8 +31,8 @@ action="index.php?module=Administration&action=drupal_connector&process=true">
 				<input title="{$MOD.LBL_CANCEL_BUTTON_TITLE}" onclick="document.location.href='index.php?module=Administration&action=index'"
 				class="button" type="button" name="cancel" value="{$APP.LBL_CANCEL_BUTTON_LABEL}" />
 				{* TODO: Action on click *}
-				<input title="Test connection" class="button" type="button" name="test-connection" onclick="return verify_data('DrupalConnectorSettings');" 
-				value="Test connection" />
+				<input title="Test connection" class="button" type="button" name="test-connection" 
+				onclick="window.location='index.php?module=Administration&action=test_drupal_connection'" value="Test connection" />
 			</td>
 		</tr>
 	</table>
@@ -59,8 +59,8 @@ action="index.php?module=Administration&action=drupal_connector&process=true">
 		<input title="{$MOD.LBL_CANCEL_BUTTON_TITLE}" onclick="document.location.href='index.php?module=Administration&action=index'"
 		class="button" type="button" name="cancel" value="{$APP.LBL_CANCEL_BUTTON_LABEL}" />
 		{* TODO: Action on click *}
-		<input title="Test connection" class="button" type="button" name="test-connection" onclick="return verify_data('DrupalConnectorSettings');" 
-		value="Test connection" />
+		<input title="Test connection" class="button" type="button" name="test-connection" 
+		onclick="window.location='index.php?module=Administration&action=test_drupal_connection'" value="Test connection" />
 	</div>
 	{$JAVASCRIPT}
 </form>

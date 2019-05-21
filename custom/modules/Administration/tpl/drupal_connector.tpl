@@ -1,3 +1,4 @@
+<script src='cache/include/javascript/sugar_grp_yui_widgets.js'></script>
 <script type="text/javascript">
 	// Some default/necessary JS
 	var ERR_NO_SINGLE_QUOTE = '{$APP.ERR_NO_SINGLE_QUOTE}';
@@ -13,6 +14,34 @@
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * TODO: Add JSDoc
+	 */
+	function testDrupalConnection(){
+		// Get the form values
+		var drupal_url = $("#drupal_url").val();
+		var drupal_username = $("#drupal_username").val();
+		var drupal_password = $("#drupal_password").val();		
+
+		// Send an AJAX request to the controller action
+		$.ajax({
+			method: "POST", 
+			url: "index.php?module=Administration&action=test_drupal_connection",
+			data: {drupal_url: drupal_url, drupal_username: drupal_username, drupal_password: drupal_password},
+			error: function(xhr){
+				YAHOO.SUGAR.MessageBox.show({msg: "An error occured: " + xhr.status + " " + xhr.statusText});
+			},
+			success: function(data){
+				if(data == 1){
+					YAHOO.SUGAR.MessageBox.show({msg: "Yay! Connection successful."});
+				}
+				else{
+					YAHOO.SUGAR.MessageBox.show({msg: "Connection failed. Please check the entered information & try again."});
+				}
+			}
+		});
 	}
 	{/literal}
 </script>
@@ -30,9 +59,9 @@ action="index.php?module=Administration&action=drupal_connector&process=true">
 				type="submit" name="save" onclick="return verify_data('DrupalConnectorSettings');" value="{$APP.LBL_SAVE_BUTTON_LABEL}" /> 
 				<input title="{$MOD.LBL_CANCEL_BUTTON_TITLE}" onclick="document.location.href='index.php?module=Administration&action=index'"
 				class="button" type="button" name="cancel" value="{$APP.LBL_CANCEL_BUTTON_LABEL}" />
-				{* TODO: Action on click *}
+				{* On click call the Javascript function testDrupalConnection() *}
 				<input title="Test connection" class="button" type="button" name="test-connection" 
-				onclick="window.location='index.php?module=Administration&action=test_drupal_connection'" value="Test connection" />
+				onclick="testDrupalConnection()" value="Test connection" />
 			</td>
 		</tr>
 	</table>
@@ -42,15 +71,15 @@ action="index.php?module=Administration&action=drupal_connector&process=true">
 		</tr>
 		<tr>
 			<td nowrap width="10%" scope="row">URL:</td>
-			<td width="70%"><input type='text' name='drupal_url' size="60" value='{$DRUPAL_URL}'></td>
+			<td width="70%"><input type='text' id='drupal_url' name='drupal_url' size="60" value='{$DRUPAL_URL}'></td>
 		</tr>
 		<tr>
 			<td nowrap width="10%" scope="row">Username:</td>
-			<td width="70%"><input type='text' name='drupal_username' size="60" value='{$DRUPAL_USERNAME}'></td>
+			<td width="70%"><input type='text' id='drupal_username' name='drupal_username' size="60" value='{$DRUPAL_USERNAME}'></td>
 		</tr>
 		<tr>
 			<td nowrap width="10%" scope="row">Password:</td>
-			<td width="70%"><input type='password' name='drupal_password' size="60" value='{$DRUPAL_PASSWORD}'></td>
+			<td width="70%"><input type='password' id='drupal_password' name='drupal_password' size="60" value='{$DRUPAL_PASSWORD}'></td>
 		</tr>
 	</table>
 	<div style="padding-top: 2px;">
@@ -58,9 +87,9 @@ action="index.php?module=Administration&action=drupal_connector&process=true">
 		type="submit" name="save" onclick="return verify_data('DrupalConnectorSettings');" value="{$APP.LBL_SAVE_BUTTON_LABEL}" />
 		<input title="{$MOD.LBL_CANCEL_BUTTON_TITLE}" onclick="document.location.href='index.php?module=Administration&action=index'"
 		class="button" type="button" name="cancel" value="{$APP.LBL_CANCEL_BUTTON_LABEL}" />
-		{* TODO: Action on click *}
+		{* On Click call the Javascript function testDrupalConnection() *}
 		<input title="Test connection" class="button" type="button" name="test-connection" 
-		onclick="window.location='index.php?module=Administration&action=test_drupal_connection'" value="Test connection" />
+		onclick="testDrupalConnection()" value="Test connection" />
 	</div>
 	{$JAVASCRIPT}
 </form>

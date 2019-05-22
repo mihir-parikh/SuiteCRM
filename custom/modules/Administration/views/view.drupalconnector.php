@@ -8,7 +8,7 @@ if(!defined ('sugarEntry') || !sugarEntry) {
 	die ('Not a valid entry point');
 }
 
-global $current_user, $sugar_config;
+global $current_user;
 
 // ACL check
 if(!is_admin ($current_user)) {
@@ -34,7 +34,7 @@ class ViewDrupalConnector extends \SugarView {
 	}
 	
 	public function display() {
-		global $sugar_config, $mod_strings, $app_strings;
+		global $mod_strings, $app_strings;
 		
 		$smarty = new Sugar_Smarty();
 		
@@ -47,16 +47,16 @@ class ViewDrupalConnector extends \SugarView {
 		$admin = new Administration();
 		$admin->retrieveSettings();
 
-		if (array_key_exists('drupal_url', $admin->settings)) {
-			$smarty->assign('DRUPAL_URL', $admin->settings['drupal_url']);
+		if (array_key_exists('drupal_connector_drupal_url', $admin->settings)) {
+			$smarty->assign('DRUPAL_URL', $admin->settings['drupal_connector_drupal_url']);
 		}
 
-		if (array_key_exists('drupal_username', $admin->settings)) {
-			$smarty->assign('DRUPAL_USERNAME', $admin->settings['drupal_username']);
+		if (array_key_exists('drupal_connector_drupal_username', $admin->settings)) {
+			$smarty->assign('DRUPAL_USERNAME', $admin->settings['drupal_connector_drupal_username']);
 		}
 
-		if (array_key_exists('drupal_password', $admin->settings)) {
-			$smarty->assign('DRUPAL_PASSWORD', $admin->settings['drupal_password']);
+		if (array_key_exists('drupal_connector_drupal_password', $admin->settings)) {
+			$smarty->assign('DRUPAL_PASSWORD', $admin->settings['drupal_connector_drupal_password']);
 		}
 
 		// Display the custom tpl

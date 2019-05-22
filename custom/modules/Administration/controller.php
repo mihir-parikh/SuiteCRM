@@ -21,12 +21,42 @@ class AdministrationController extends \SugarController {
 	public function action_drupal_connector(){
 		// This will call the view.drupalconnector.php file
 		$this->view = 'drupalconnector';
+		
+		// Handle changes after submission
+		if(isset($_REQUEST['process']) && $_REQUEST['process'] == 'true'){
+			// Server side validation
+			$validation_result = $this->validate_inputs($_REQUEST['drupal_url'], $_REQUEST['drupal_username'], $_REQUEST['drupal_password']);
+			
+			// If the server side validation has passed then only go ahead
+			if($validation_result === true){
+				$administration_bean = new Administration();
+				$administration_bean->retrieveSettings();
+				
+				$administration_bean->saveSetting("drupal_connector", "drupal_url", html_entity_decode($_REQUEST['drupal_url']));
+				$administration_bean->saveSetting("drupal_connector", "drupal_username", $_REQUEST['drupal_username']);
+				$administration_bean->saveSetting("drupal_connector", "drupal_password", $_REQUEST['drupal_password']);
+				
+				SugarApplication::appendSuccessMessage('Yay! Drupal Connector configuration is successfully saved.');
+				SugarApplication::redirect('index.php?module=Administration&action=index');				
+			}
+			else{
+				SugarApplication::appendErrorMessage('Mandatory information is missing. Please enter all form fields');
+			}
+		}	
 	}
 	
 	/**
-	 * TODO Write PHPDoc
+	 * Controller action sending test request
 	 */
 	public function action_test_drupal_connection() {
+		// Server side validation
+		$validation_result = $this->validate_inputs($_REQUEST['drupal_url'], $_REQUEST['drupal_username'], $_REQUEST['drupal_password']);
+		
+		if($validation_result === false){
+			echo -1;
+			exit(0);
+		}
+		
 		// Send a request to Drupal
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $_REQUEST['drupal_url']);
@@ -50,6 +80,24 @@ class AdministrationController extends \SugarController {
 			echo 0;
 		}
 		exit(0);
+	}
+	
+	/**
+	 * Validate the Drupal Connector form inputs
+	 * 
+	 * @param String $drupal_url URL entered in the form
+	 * @param String $drupal_username Drupal username
+	 * @param String $drupal_password Drupal Password
+	 * 
+	 * @return boolean Returns true or false based on validation passed or failed
+	 */
+	private function validate_inputs($drupal_url, $drupal_username, $drupal_password){
+		if(empty($drupal_url) || empty($drupal_username) || empty($drupal_password)){
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 }
 

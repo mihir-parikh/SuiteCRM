@@ -5,6 +5,23 @@
 	var cannotEq = "{$APP.ERR_DECIMAL_SEP_EQ_THOUSANDS_SEP}";
 
 	{literal}
+	/**
+	 * Validate form inputs
+	 *
+	 * @return {boolean} Return true or false based on validation passed or failed
+	 */
+	function validateDCInputs(){
+		// None of the fields should be empty
+		if ($.trim($('#drupal_url').val()).length === 0 || $.trim($('#drupal_username').val()).length === 0 || 
+				$.trim($('#drupal_password').val()).length === 0){
+			YAHOO.SUGAR.MessageBox.show({msg: "Mandatory information is missing. Please enter all form fields"});
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
 	function verify_data(formName) {
 		var f = document.getElementById(formName);
 		for (i = 0; i < f.elements.length; i++) {
@@ -13,17 +30,32 @@
 				return false;
 			}
 		}
+
+		// Adding custom validation in
+		var validationResult = validateDCInputs();
+
+		if(validationResult === false) {
+			// Do not go ahead
+			return false;
+		}
+		
 		return true;
 	}
 
 	/**
-	 * TODO: Add JSDoc
+	 * Javascript handler handling Test connection
 	 */
 	function testDrupalConnection(){
 		// Get the form values
 		var drupal_url = $("#drupal_url").val();
 		var drupal_username = $("#drupal_username").val();
-		var drupal_password = $("#drupal_password").val();		
+		var drupal_password = $("#drupal_password").val();
+
+		var validationResult = validateDCInputs();
+
+		if(validationResult === false) {
+			return false;
+		}		
 
 		// Send an AJAX request to the controller action
 		$.ajax({
@@ -36,6 +68,9 @@
 			success: function(data){
 				if(data == 1){
 					YAHOO.SUGAR.MessageBox.show({msg: "Yay! Connection successful."});
+				}
+				else if(data == -1){
+					YAHOO.SUGAR.MessageBox.show({msg: "Mandatory information is missing. Please enter all form fields"});
 				}
 				else{
 					YAHOO.SUGAR.MessageBox.show({msg: "Connection failed. Please check the entered information & try again."});
@@ -70,15 +105,15 @@ action="index.php?module=Administration&action=drupal_connector&process=true">
 			<th align="left" scope="row" colspan="2"><h4>Drupal Connector configurations</h4></th>
 		</tr>
 		<tr>
-			<td nowrap width="10%" scope="row">URL:</td>
+			<td nowrap width="10%" scope="row">URL:*</td>
 			<td width="70%"><input type='text' id='drupal_url' name='drupal_url' size="60" value='{$DRUPAL_URL}'></td>
 		</tr>
 		<tr>
-			<td nowrap width="10%" scope="row">Username:</td>
+			<td nowrap width="10%" scope="row">Username:*</td>
 			<td width="70%"><input type='text' id='drupal_username' name='drupal_username' size="60" value='{$DRUPAL_USERNAME}'></td>
 		</tr>
 		<tr>
-			<td nowrap width="10%" scope="row">Password:</td>
+			<td nowrap width="10%" scope="row">Password:*</td>
 			<td width="70%"><input type='password' id='drupal_password' name='drupal_password' size="60" value='{$DRUPAL_PASSWORD}'></td>
 		</tr>
 	</table>

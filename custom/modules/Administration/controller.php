@@ -34,6 +34,9 @@ class AdministrationController extends \SugarController {
 				
 				$administration_bean->saveSetting("drupal_connector", "drupal_url", html_entity_decode($_REQUEST['drupal_url']));
 				$administration_bean->saveSetting("drupal_connector", "drupal_username", $_REQUEST['drupal_username']);
+				
+				// Encrypt the password before saving it in database
+				$crypted_token = $this->encrypt_password($_REQUEST['drupal_password'], $administration_bean);
 				$administration_bean->saveSetting("drupal_connector", "drupal_password", $_REQUEST['drupal_password']);
 				
 				SugarApplication::appendSuccessMessage('Yay! Drupal Connector configuration is successfully saved.');
@@ -43,6 +46,26 @@ class AdministrationController extends \SugarController {
 				SugarApplication::appendErrorMessage('Mandatory information is missing. Please enter all form fields');
 			}
 		}	
+	}
+	
+	/**
+	 * TODO Write PHPDoc
+	 */
+	private function encrypt_password($entered_password, $administration_bean) {
+		// Reference: https://www.the-art-of-web.com/php/two-way-encryption/
+		
+		$cipher_method = "aes-128-ctr";
+		$enc_key = openssl_digest(php_uname(), 'SHA256', TRUE);
+		$enc_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher_method));
+		$crypted_token = openssl_encrypt($entered_password, $cipher_method, $enc_key, 0, $enc_iv) . "::" . bin2hex($enc_iv);
+		
+		$administration_bean->saveSetting("drupal_connector", "drupal_enc_key", $enc_key);
+		$administration_bean->saveSetting("drupal_connector", "drupal_enc_iv", $enc_iv);
+
+		// unset all of the above
+		unset($entered_password, $cipher_method, $enc_key, $enc_iv);
+		
+		return $crypted_token;
 	}
 	
 	/**

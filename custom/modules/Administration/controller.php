@@ -37,7 +37,7 @@ class AdministrationController extends \SugarController {
 				
 				// Encrypt the password before saving it in database
 				$crypted_token = $this->encrypt_password($_REQUEST['drupal_password'], $administration_bean);
-				$administration_bean->saveSetting("drupal_connector", "drupal_password", $_REQUEST['drupal_password']);
+				$administration_bean->saveSetting("drupal_connector", "drupal_password", $crypted_token);
 				
 				SugarApplication::appendSuccessMessage('Yay! Drupal Connector configuration is successfully saved.');
 				SugarApplication::redirect('index.php?module=Administration&action=index');				

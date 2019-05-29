@@ -56,9 +56,10 @@ class ViewDrupalConnector extends \SugarView {
 		}
 
 		// Decrypt the password
+		$drupal_password = $this->decrypt_password($admin);
 
 		if (array_key_exists('drupal_connector_drupal_password', $admin->settings)) {
-			$smarty->assign('DRUPAL_PASSWORD', $admin->settings['drupal_connector_drupal_password']);
+			$smarty->assign('DRUPAL_PASSWORD', $drupal_password);
 		}
 
 		// Display the custom tpl
@@ -72,7 +73,12 @@ class ViewDrupalConnector extends \SugarView {
 		$crypted_token = $admin->settings['drupal_connector_drupal_password'];
 		list($crypted_token, $enc_iv) = explode("::", $crypted_token);
 		$cipher_method = 'aes-128-ctr';
-		$enc_key = $admin->settings['drupal_connector_drupal_enc_key'];
+		$enc_key_hex = $admin->settings['drupal_connector_drupal_enc_key'];
+		$enc_key = hex2bin($enc_key_hex);
+		$drupal_password = openssl_decrypt($crypted_token, $cipher_method, $enc_key, 0, hex2bin($enc_iv));
+		unset($crypted_token, $cipher_method, $enc_key, $enc_iv, $enc_key_hex);
+
+		return $drupal_password;
 	}
 }
 

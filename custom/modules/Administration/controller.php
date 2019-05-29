@@ -59,10 +59,8 @@ class AdministrationController extends \SugarController {
 		$enc_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher_method));
 		$crypted_token = openssl_encrypt($entered_password, $cipher_method, $enc_key, 0, $enc_iv) . "::" . bin2hex($enc_iv);
 		
-		// TODO use bin2hex to make this database friendly
-		$administration_bean->saveSetting("drupal_connector", "drupal_enc_key", $enc_key);
-		// TODO No need to save enc_iv in the database, it is appended at the end of crypted token
-		$administration_bean->saveSetting("drupal_connector", "drupal_enc_iv", $enc_iv);
+		// Use bin2hex to make $enc_key a database friendly value
+		$administration_bean->saveSetting("drupal_connector", "drupal_enc_key", bin2hex($enc_key));
 
 		// unset all of the above
 		unset($entered_password, $cipher_method, $enc_key, $enc_iv);

@@ -67,7 +67,9 @@ class ViewDrupalConnector extends \SugarView {
 	}
 
 	/**
-	 * TODO: Write PHPDoc
+	 * An internal function to decrypt Drupal password
+	 * @param Administration $admin Administration bean
+	 * @return String Decrypted password
 	 */
 	private function decrypt_password($admin) {
 		$crypted_token = $admin->settings['drupal_connector_drupal_password'];

@@ -49,7 +49,10 @@ class AdministrationController extends \SugarController {
 	}
 	
 	/**
-	 * TODO Write PHPDoc
+	 * An internal method to encrypt an entered password 
+	 * @param String $entered_password Password filled in the form
+	 * @param Administration $administration_bean An instance of Administration bean
+	 * @return String Encrypted password 
 	 */
 	private function encrypt_password($entered_password, $administration_bean) {
 		// Reference: https://www.the-art-of-web.com/php/two-way-encryption/
